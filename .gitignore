@@ -1,0 +1,13 @@
+__pycache__/
+*.logs
+*.conf
+testes.py
+main.py
+sounds/
+*.sql
+ivrs_bsnl_venv
+htmlcov/
+.coverage
+oncontainervenv/
+backup_cdr_bakup*.csv
+*.ini
