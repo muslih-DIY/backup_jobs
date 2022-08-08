@@ -1,6 +1,6 @@
 from dataclasses import dataclass,field
 from abc import ABC, abstractmethod
-from typing import List, Protocol
+from typing import List
 from datetime import datetime
 import csv
 from pathlib import Path
@@ -9,7 +9,8 @@ import os
 BASE_DIR = Path(__file__).resolve().parent
 BACKUPDIR = os.path.join(BASE_DIR, 'FailedJobs')
 
-class dbmodel(Protocol):
+class dbmodel(ABC):
+
     def connect():
         ...
     def close():
