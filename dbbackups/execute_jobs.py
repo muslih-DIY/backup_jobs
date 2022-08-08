@@ -2,6 +2,8 @@ from ..dbbackups.BackupBase import BackupJobs
 
 def main():
     jobs = BackupJobs.get_acivte_jobs()
+    print(jobs)
+    exit()
     if not jobs:
         print("No bakup Jobs")
         return 1
@@ -10,6 +12,3 @@ def main():
         x=job()
         x()
     return 1
-
-if __name__=='__main__':
-    main()

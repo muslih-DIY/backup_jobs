@@ -1,15 +1,15 @@
-from enum import unique
-from .BackupBase import BackupJobs
+from .BackupBase import BackupJobs,dbmodel
 from dataclasses import dataclass
 from .backup_settings import localpg,oraclesdc
 
 @dataclass
 class CDR_1500_RMN(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc    
     FromTable: str  =   'CDR'
     ToTable: str    =   'TEST_CDR_1500_RMN'
     def __post_init__(self):
-        self.FromDb = localpg
-        self.ToDb = oraclesdc
+
         self.FromColumn = [
             'CALLDATE','CONTAINER_ID','CLID','SRC','DST','DCONTEXT','CHANNEL','DSTCHANNEL','LASTAPP',
             'LASTDATA','DURATION','BILLSEC','DISPOSITION','AMAFLAGS','ACCOUNTCODE','UNIQUEID','USERFIELD',
@@ -35,11 +35,12 @@ class CDR_1500_RMN(BackupJobs):
 
 @dataclass
 class CDR_1500_APPEAL(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc
     FromTable: str  =   'CDR'
     ToTable: str    =   'TEST_CDR_APPEAL'
     def __post_init__(self):
-        self.FromDb = localpg
-        self.ToDb = oraclesdc
+
         self.FromColumn =[
             'CALLDATE','CONTAINER_ID','CLID','SRC','DST','DCONTEXT','CHANNEL','DSTCHANNEL','LASTAPP','LASTDATA',
             'DURATION','BILLSEC','DISPOSITION','AMAFLAGS','ACCOUNTCODE','UNIQUEID','USERFIELD','PHONENO','CALLSTAGES',
@@ -65,11 +66,12 @@ class CDR_1500_APPEAL(BackupJobs):
 
 @dataclass
 class CDR_1500(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc    
     FromTable: str  =   'CDR'
     ToTable: str    =   'TEST_CDR_1500'
     def __post_init__(self):
-        self.FromDb = localpg
-        self.ToDb = oraclesdc
+
         self.FromColumn =[
             'CALLDATE','CONTAINER_ID','CLID','SRC','DST','DCONTEXT','CHANNEL','DSTCHANNEL','LASTAPP','LASTDATA','DURATION',
             'BILLSEC','DISPOSITION','AMAFLAGS','ACCOUNTCODE','UNIQUEID','USERFIELD','PHONENO','CALLSTAGES','ZONE','REGION_NO',

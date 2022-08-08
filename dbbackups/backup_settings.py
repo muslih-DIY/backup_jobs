@@ -1,5 +1,5 @@
 from ..dbwrapers import or_wraper,pg_wraper
-from ..configmod import config
+from ..configmod.ReadConfig import config
 
 conf = config()
 
