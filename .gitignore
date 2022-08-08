@@ -11,3 +11,5 @@ htmlcov/
 oncontainervenv/
 backup_cdr_bakup*.csv
 *.ini
+
+uploadtooracle.py

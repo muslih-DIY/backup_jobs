@@ -85,14 +85,9 @@ class BackupJobs(ABC):
         if not error:
             return 1
         error_row_unique=self.get_error_row_unique_keys(error)
-
-
-        condition = ' and '.join([f"{key}=%({key})s" for key in error_row_unique[0]])
-
-        error_update_query = ' where '.join([self.error_update_query,condition])
-
-        if not self.FromDb.execute_many(error_update_query,error_row_unique):
+        if not self.FromDb.execute_many(self.error_update_query,error_row_unique):
             return 0
+            
         return 1
     def update_report(self,*args):
         self.job_report='\n'.join([self.job_report,''.join([str(arg) for arg in args])])
