@@ -62,9 +62,11 @@ class BackupJobs(ABC):
     def __post_init__(self):
         self.job_name = 'backup_'+ self.FromTable
         self.job_report = ''.join(['\tREPORT\n','= ='*10])
+    
     def __call__(self):
         self.FromDb.connect()
-        self.ToDb.connect()    
+        self.ToDb.connect() 
+        print(self.ToDb.con)   
         status = self.run()
         print(self.job_report)
         self.ToDb.close()
