@@ -7,7 +7,7 @@ class CDR_1500_RMN(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
     FromTable: str  =   'CDR'
-    ToTable: str    =   'TEST_CDR_1500_RMN'
+    ToTable: str    =   'TEST_CDR_RMN'
     def __post_init__(self):
 
         self.FromColumn = [
@@ -69,7 +69,7 @@ class CDR_1500(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
     FromTable: str  =   'CDR'
-    ToTable: str    =   'TEST_CDR_1500'
+    ToTable: str    =   'CDR_1500_TEST'
     def __post_init__(self):
 
         self.FromColumn =[
