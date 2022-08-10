@@ -6,7 +6,7 @@ from .backup_settings import localpg,oraclesdc
 class CDR_1500_RMN(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'CDR'
+    FromTable: str  =   'CDR_TEST'
     ToTable: str    =   'TEST_CDR_RMN'
     def __post_init__(self):
 
@@ -37,7 +37,7 @@ class CDR_1500_RMN(BackupJobs):
 class CDR_1500_APPEAL(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc
-    FromTable: str  =   'CDR'
+    FromTable: str  =   'CDR_TEST'
     ToTable: str    =   'TEST_CDR_APPEAL'
     def __post_init__(self):
 
@@ -68,7 +68,7 @@ class CDR_1500_APPEAL(BackupJobs):
 class CDR_1500(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'CDR'
+    FromTable: str  =   'CDR_TEST'
     ToTable: str    =   'CDR_1500_TEST'
     def __post_init__(self):
 
@@ -83,6 +83,183 @@ class CDR_1500(BackupJobs):
         self.fromcol  =   ','.join(self.FromColumn)
 
         self.unique_keys = map(lambda x : str.lower(x),['UNIQUEID','TRANSID'] )
+
+        unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
+
+        self.pre_pull_querys = (f'update {self.FromTable} set deletflag=1 where deletflag=0',)
+
+        self.pull_query=f"select now()::timestamp(6),{self.fromcol} from {self.FromTable} where deletflag=1"
+
+        self.error_update_query = ' where '.join([f'update {self.FromTable} set deletflag=3 ',unique_key_str]) 
+        
+        self.final_post_push_querys = (f"delete from {self.FromTable} where deletflag=1",) 
+        
+        super().__post_init__()
+
+
+@dataclass
+class CDR_1500_DOCKET(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc    
+    FromTable: str  =   'ivrs_docket_api_test'
+    ToTable: str    =   'TEST_DOCKET_API_1500'
+    def __post_init__(self):
+
+        self.FromColumn =[
+            'API_DATE','ZONE','API_STATUS','INPUT','OUTPUT','ERROR',
+            'STD_CODE','COMP_FLAG','DOCKET_ID','TRANSID']
+
+        self.ToColumn   =   ['ENTRY_DATE']+self.FromColumn
+
+        self.fromcol  =   ','.join(self.FromColumn)
+
+        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+
+        unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
+
+        self.pre_pull_querys = (f'update {self.FromTable} set deletflag=1 where deletflag=0',)
+
+        self.pull_query=f"select now()::timestamp(6),{self.fromcol} from {self.FromTable} where deletflag=1"
+
+        self.error_update_query = ' where '.join([f'update {self.FromTable} set deletflag=3 ',unique_key_str]) 
+        
+        self.final_post_push_querys = (f"delete from {self.FromTable} where deletflag=1",) 
+        
+        super().__post_init__()
+
+@dataclass
+class CDR_1500_BILL(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc    
+    FromTable: str  =   'ivrs_bill_api_test'
+    ToTable: str    =   'TEST_BILL_API_1500'
+    def __post_init__(self):
+
+        self.FromColumn =[
+            'API_DATE','ZONE','API_STATUS','INPUT','OUTPUT','ERROR',
+            'STD_CODE','COMP_FLAG','DOCKET_ID','TRANSID']
+
+        self.ToColumn   =   ['ENTRY_DATE']+self.FromColumn
+
+        self.fromcol  =   ','.join(self.FromColumn)
+
+        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+
+        unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
+
+        self.pre_pull_querys = (f'update {self.FromTable} set deletflag=1 where deletflag=0',)
+
+        self.pull_query=f"select now()::timestamp(6),{self.fromcol} from {self.FromTable} where deletflag=1"
+
+        self.error_update_query = ' where '.join([f'update {self.FromTable} set deletflag=3 ',unique_key_str]) 
+        
+        self.final_post_push_querys = (f"delete from {self.FromTable} where deletflag=1",) 
+        
+        super().__post_init__()
+
+@dataclass
+class CDR_1500_VIP(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc    
+    FromTable: str  =   'ivrs_vip_api_test'
+    ToTable: str    =   'TEST_VIP_API_1500'
+    def __post_init__(self):
+
+        self.FromColumn =['API_DATE','ZONE','API_HIT','INPUT_NUMBER','FLAG','RESPONSE','TRANSID']
+
+        self.ToColumn   =   ['ENTRY_DATE']+self.FromColumn
+
+        self.fromcol  =   ','.join(self.FromColumn)
+
+        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+
+        unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
+
+        self.pre_pull_querys = (f'update {self.FromTable} set deletflag=1 where deletflag=0',)
+
+        self.pull_query=f"select now()::timestamp(6),{self.fromcol} from {self.FromTable} where deletflag=1"
+
+        self.error_update_query = ' where '.join([f'update {self.FromTable} set deletflag=3 ',unique_key_str]) 
+        
+        self.final_post_push_querys = (f"delete from {self.FromTable} where deletflag=1",) 
+        
+        super().__post_init__()
+
+
+@dataclass
+class CDR_1500_VIP(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc    
+    FromTable: str  =   'ivrs_chd_api_test'
+    ToTable: str    =   'TEST_CHD_API_1500'
+    def __post_init__(self):
+
+        self.FromColumn =['API_DATE','ZONE','API_HIT','INPUT_NUMBER','FLAG','RESPONSE','TRANSID']
+
+        self.ToColumn   =   ['ENTRY_DATE']+self.FromColumn
+
+        self.fromcol  =   ','.join(self.FromColumn)
+
+        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+
+        unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
+
+        self.pre_pull_querys = (f'update {self.FromTable} set deletflag=1 where deletflag=0',)
+
+        self.pull_query=f"select now()::timestamp(6),{self.fromcol} from {self.FromTable} where deletflag=1"
+
+        self.error_update_query = ' where '.join([f'update {self.FromTable} set deletflag=3 ',unique_key_str]) 
+        
+        self.final_post_push_querys = (f"delete from {self.FromTable} where deletflag=1",) 
+        
+        super().__post_init__()
+
+
+@dataclass
+class CDR_1500_APP(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc    
+    FromTable: str  =   'ivrs_appeal_api_test'
+    ToTable: str    =   'TEST_APP_API_1500'
+    def __post_init__(self):
+
+        self.FromColumn =[
+            'API_DATE','ZONE','INPUT_NUMBER','RESPONSE','INPUT_FLAG',
+            'INPUT_COMPID','RESFLAG','APPNO','TRANSID']
+
+        self.ToColumn   =   ['ENTRY_DATE']+self.FromColumn
+
+        self.fromcol  =   ','.join(self.FromColumn)
+
+        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+
+        unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
+
+        self.pre_pull_querys = (f'update {self.FromTable} set deletflag=1 where deletflag=0',)
+
+        self.pull_query=f"select now()::timestamp(6),{self.fromcol} from {self.FromTable} where deletflag=1"
+
+        self.error_update_query = ' where '.join([f'update {self.FromTable} set deletflag=3 ',unique_key_str]) 
+        
+        self.final_post_push_querys = (f"delete from {self.FromTable} where deletflag=1",) 
+        
+        super().__post_init__()
+
+@dataclass
+class CDR_1500_RMN_API(BackupJobs):
+    FromDb :dbmodel = localpg
+    ToDb :dbmodel = oraclesdc    
+    FromTable: str  =   'rmn_numbers_test'
+    ToTable: str    =   'TEST_RMN_API'
+    def __post_init__(self):
+
+        self.FromColumn = ['DATE','PHONENUMBER','CIRCLE','SSA','OTP','IS_SUCCESS','TRANSID']
+
+        self.ToColumn   =   ['ENTRY_DATE']+self.FromColumn
+
+        self.fromcol  =   ','.join(self.FromColumn)
+
+        self.unique_keys = map(lambda x : str.lower(x),['DATE','TRANSID'] )
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
