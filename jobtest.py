@@ -1,3 +1,3 @@
-from .dbbackups import execute_jobs
+from .dbbackups import backup
 
-execute_jobs.main()
+backup.details()

@@ -18,7 +18,7 @@ class CDR_1500_RMN(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['UNIQUEID','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['UNIQUEID','TRANSID'] ))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
@@ -50,7 +50,7 @@ class CDR_1500_APPEAL(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['UNIQUEID','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['UNIQUEID','TRANSID'] ))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
@@ -82,7 +82,7 @@ class CDR_1500(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['UNIQUEID','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['UNIQUEID','TRANSID'] ))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
@@ -113,7 +113,7 @@ class CDR_1500_DOCKET(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['API_DATE','TRANSID'] ))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
@@ -143,7 +143,7 @@ class CDR_1500_BILL(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['API_DATE','TRANSID'] ))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
@@ -171,7 +171,7 @@ class CDR_1500_VIP(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['API_DATE','TRANSID'] ))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
@@ -200,7 +200,7 @@ class CDR_1500_VIP(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['API_DATE','TRANSID'] ))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
@@ -231,7 +231,7 @@ class CDR_1500_APP(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['API_DATE','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['API_DATE','TRANSID'] ))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
@@ -259,7 +259,7 @@ class CDR_1500_RMN_API(BackupJobs):
 
         self.fromcol  =   ','.join(self.FromColumn)
 
-        self.unique_keys = map(lambda x : str.lower(x),['DATE','TRANSID'] )
+        self.unique_keys = list(map(lambda x : str.lower(x),['DATE','TRANSID']))
 
         unique_key_str = ' and '.join([f"{key}=%({key})s" for key in self.unique_keys])
 
