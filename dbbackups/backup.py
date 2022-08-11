@@ -14,21 +14,22 @@ def execute():
 def details():
     jobs = BackupJobs.get_acivte_jobs()
     count = 1
+
     for name,work in jobs.items():
         job:BackupJobs=work()
-        print(f'({count = })## {job.job_name = } ##')
+        print(f'(count :{count})## job_name = {job.job_name} ##')
         print('='*60)
-        print(f'{job.FromTable = } ')
-        print(f'{job.ToTable = } ')
-        print(f'{job.FromColumn = } ')
-        print(f'{job.ToColumn = } ')
-        print(f'{job.unique_keys = } ')
-        print(f'{job.pre_pull_querys = } ')
-        print(f'{job.pull_query = } ')
-        print(f'{job.error_update_query = } ')
-        print(f'{job.post_push_error_handle_failed_querys = } ')
-        print(f'{job.post_push_error_handle_success_querys = } ')
-        print(f'{job.final_post_push_querys = } ')
+        print(f'FromTable  = {job.FromTable} ')
+        print(f'ToTable  = {job.ToTable} ')
+        print(f'FromColumn  = {job.FromColumn} ')
+        print(f'ToColumn  = {job.ToColumn} ')
+        print(f'unique_keys  = {job.unique_keys} ')
+        print(f'pre_pull_querys  = {job.pre_pull_querys} ')
+        print(f'pull_query  = {job.pull_query} ')
+        print(f'error_update_query  = {job.error_update_query} ')
+        print(f'post_push_error_handle_failed_querys  = {job.post_push_error_handle_failed_querys} ')
+        print(f'post_push_error_handle_success_querys  = {job.post_push_error_handle_success_querys} ')
+        print(f'final_post_push_querys  =  {job.final_post_push_querys} ')
         print('='*60)
         count+=1
 

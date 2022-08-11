@@ -1,3 +1,4 @@
+
 from .BackupBase import BackupJobs,dbmodel
 from dataclasses import dataclass
 from .backup_settings import localpg,oraclesdc
@@ -6,8 +7,8 @@ from .backup_settings import localpg,oraclesdc
 class CDR_1500_RMN(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'CDR_TEST'
-    ToTable: str    =   'TEST_CDR_RMN'
+    FromTable: str  =   'cdr'
+    ToTable: str    =   'CDR_RMN'
     def __post_init__(self):
 
         self.FromColumn = [
@@ -37,8 +38,8 @@ class CDR_1500_RMN(BackupJobs):
 class CDR_1500_APPEAL(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc
-    FromTable: str  =   'CDR_TEST'
-    ToTable: str    =   'TEST_CDR_APPEAL'
+    FromTable: str  =   'cdr'
+    ToTable: str    =   'CDR_APPEAL'
     def __post_init__(self):
 
         self.FromColumn =[
@@ -68,8 +69,8 @@ class CDR_1500_APPEAL(BackupJobs):
 class CDR_1500(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'CDR_TEST'
-    ToTable: str    =   'CDR_1500_TEST'
+    FromTable: str  =   'cdr'
+    ToTable: str    =   'CDR_1500'
     def __post_init__(self):
 
         self.FromColumn =[
@@ -101,8 +102,8 @@ class CDR_1500(BackupJobs):
 class CDR_1500_DOCKET(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'ivrs_docket_api_test'
-    ToTable: str    =   'TEST_DOCKET_API_1500'
+    FromTable: str  =   'ivrs_docket_api'
+    ToTable: str    =   'DOCKET_API_1500'
     def __post_init__(self):
 
         self.FromColumn =[
@@ -131,13 +132,11 @@ class CDR_1500_DOCKET(BackupJobs):
 class CDR_1500_BILL(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'ivrs_bill_api_test'
-    ToTable: str    =   'TEST_BILL_API_1500'
+    FromTable: str  =   'ivrs_bill_api'
+    ToTable: str    =   'BILL_API_1500'
     def __post_init__(self):
 
-        self.FromColumn =[
-            'API_DATE','ZONE','API_STATUS','INPUT','OUTPUT','ERROR',
-            'STD_CODE','COMP_FLAG','DOCKET_ID','TRANSID']
+        self.FromColumn =['API_DATE','ZONE','API_HIT','INPUT_NUMBER','FLAG','RESPONSE','TRANSID']
 
         self.ToColumn   =   ['ENTRY_DATE']+self.FromColumn
 
@@ -161,8 +160,8 @@ class CDR_1500_BILL(BackupJobs):
 class CDR_1500_VIP(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'ivrs_vip_api_test'
-    ToTable: str    =   'TEST_VIP_API_1500'
+    FromTable: str  =   'ivrs_vip_api'
+    ToTable: str    =   'VIP_API_1500'
     def __post_init__(self):
 
         self.FromColumn =['API_DATE','ZONE','API_HIT','INPUT_NUMBER','FLAG','RESPONSE','TRANSID']
@@ -187,11 +186,11 @@ class CDR_1500_VIP(BackupJobs):
 
 
 @dataclass
-class CDR_1500_VIP(BackupJobs):
+class CDR_1500_CHD(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'ivrs_chd_api_test'
-    ToTable: str    =   'TEST_CHD_API_1500'
+    FromTable: str  =   'ivrs_chd_api'
+    ToTable: str    =   'CHD_API_1500'
     def __post_init__(self):
 
         self.FromColumn =['API_DATE','ZONE','API_HIT','INPUT_NUMBER','FLAG','RESPONSE','TRANSID']
@@ -219,8 +218,8 @@ class CDR_1500_VIP(BackupJobs):
 class CDR_1500_APP(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'ivrs_appeal_api_test'
-    ToTable: str    =   'TEST_APP_API_1500'
+    FromTable: str  =   'ivrs_appeal_api'
+    ToTable: str    =   'APP_API_1500'
     def __post_init__(self):
 
         self.FromColumn =[
@@ -249,13 +248,13 @@ class CDR_1500_APP(BackupJobs):
 class CDR_1500_RMN_API(BackupJobs):
     FromDb :dbmodel = localpg
     ToDb :dbmodel = oraclesdc    
-    FromTable: str  =   'rmn_numbers_test'
-    ToTable: str    =   'TEST_RMN_API'
+    FromTable: str  =   'rmn_numbers'
+    ToTable: str    =   'RMN_API'
     def __post_init__(self):
 
         self.FromColumn = ['DATE','PHONENUMBER','CIRCLE','SSA','OTP','IS_SUCCESS','TRANSID']
 
-        self.ToColumn   =   ['ENTRY_DATE']+self.FromColumn
+        self.ToColumn   =   ['ENTRY_DATE','API_DATE']+self.FromColumn[1:]
 
         self.fromcol  =   ','.join(self.FromColumn)
 

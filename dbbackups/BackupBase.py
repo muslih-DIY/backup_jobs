@@ -1,5 +1,6 @@
 from dataclasses import dataclass,field
 from abc import ABC, abstractmethod
+from distutils.log import debug
 from typing import List
 from datetime import datetime
 import csv
@@ -45,6 +46,7 @@ class BackupJobs(ABC):
     post_push_error_handle_failed_querys:   List=field(init=False,default_factory=list) 
     post_push_error_handle_success_querys:   List=field(init=False,default_factory=list)
     is_disabled : bool = False
+    debug : bool = False
     _registry = {}
     
     @staticmethod
@@ -60,13 +62,12 @@ class BackupJobs(ABC):
         return {name:job for name,job in cls._registry.items() if not job.is_disabled}
 
     def __post_init__(self):
-        self.job_name = 'backup_'+ self.FromTable
+        self.job_name = 'backup_'+ self.FromTable +'_to_'+self.ToTable
         self.job_report = ''.join(['\tREPORT\n','= ='*10])
     
     def __call__(self):
         self.FromDb.connect()
         self.ToDb.connect() 
-        print(self.ToDb.con)   
         status = self.run()
         print(self.job_report)
         self.ToDb.close()
@@ -74,12 +75,12 @@ class BackupJobs(ABC):
         return status
         
 
-    @abstractmethod
-    def run(self):
-        pass
+
     def get_error_row_unique_keys(self,error):        
         error_row_unique = []
         for row,msg in error:
+            if self.debug:
+                print(row,msg)
             error_row_unique.append({key:row[idx] for key,idx in self.indexkey})
         return error_row_unique
     
@@ -88,6 +89,9 @@ class BackupJobs(ABC):
         if not error:
             return 1
         error_row_unique=self.get_error_row_unique_keys(error)
+
+        self.backup_update(1,f"Errors Found:{len(error)}")
+
         if not self.FromDb.execute_many(self.error_update_query,error_row_unique):
             return 0
             
@@ -116,6 +120,14 @@ class BackupJobs(ABC):
             csvfile_head.writerow(head)
             csvfile_head.writerows(data)
         return filename
+    
+    def backup_update(self,gravity:int=0,remarks:str=''):
+        backup_status_table = 'IVRS_BACKUP_STATUS'
+        status = {'BACKUP_DAY':datetime.now(),
+            'NAME':self.job_name[:100],
+            'FAILURE_GRAVITY' : gravity,
+            'REMARK' :remarks[:127]}
+        self.ToDb.dict_insert(status,table=backup_status_table)
 
 
     def run(self) -> bool:
@@ -139,17 +151,29 @@ class BackupJobs(ABC):
         # if error managment failed
         if not self.manage_error(errors):
             filename = self.save_to_csv(self.ToColumn,map(lambda row:row[0],errors))
+            
             self.update_report(f"managing error failed,error data stored to : {filename}")
+            
+            self.backup_update(2,f"managing error failed see {filename}")
+            
             self.run_query_set('post_push_error_handle_failed_querys')                
         else:
+            
             self.update_report("error_handling is succeded")
+            
             self.run_query_set('post_push_error_handle_success_querys')
         
         self.update_report("final_post_push_querys is running ...")
+
         if not self.run_query_set('final_post_push_querys'):
-            self.update_report("Job Failed at 'final_post_push_querys' ")
+            
+            self.update_report("Job Failed at final_post_push_querys ")
+            self.backup_update(0,f"Job Failed at final_post_push_querys")
+            
             return 0
+        
         self.update_report("Job Completed Successfully\n",'='*10)
+        
         return 1
 
             
