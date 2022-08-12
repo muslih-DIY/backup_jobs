@@ -4,16 +4,16 @@ from ..configmod.ReadConfig import config
 conf = config()
 
 pgcon = {
-        'user':conf.LocalPGConfig.dbuser,
-        'password':conf.LocalPGConfig.password,
-        'host':conf.LocalPGConfig.host,
-        'database':conf.LocalPGConfig.dbname,
-        'port':conf.LocalPGConfig.port}
+        'user':conf.postgresdb.dbuser,
+        'password':conf.postgresdb.password,
+        'host':conf.postgresdb.host,
+        'database':conf.postgresdb.dbname,
+        'port':conf.postgresdb.port}
 
 orcon = {
-        'user':conf.OracleConfig.dbuser,
-        'password':conf.OracleConfig.password,
-        'sid':conf.OracleConfig.sid}        
+        'user':conf.oracledbsdc.dbuser,
+        'password':conf.oracledbsdc.password,
+        'sid':conf.oracledbsdc.sid}        
 
 localpg = pg_wraper.pg2_base_wrap(pgcon)
 
