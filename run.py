@@ -1,4 +1,4 @@
-from bkpjobs.dbbackups import backup
+from backup_project.bkpjobs import backup
 
-#backup.details()
+backup.details()
 backup.execute()

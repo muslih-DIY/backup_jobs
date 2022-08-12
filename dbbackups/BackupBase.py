@@ -1,6 +1,5 @@
 from dataclasses import dataclass,field
-from abc import ABC, abstractmethod
-from distutils.log import debug
+from abc import ABC
 from typing import List
 from datetime import datetime
 import csv
@@ -35,6 +34,7 @@ class BackupJobs(ABC):
     
     FromDb:dbmodel
     ToDb  :dbmodel
+    ClassOfJob:str
     ToTable :   str
     FromTable   : str
     pull_query  :   str     =   field(init=False) 
@@ -51,15 +51,19 @@ class BackupJobs(ABC):
     
     @staticmethod
     def register_class(cls):
-        cls._registry[cls.__name__] = cls
+        if not cls.ClassOfJob in cls._registry.keys():
+            cls._registry[cls.ClassOfJob]={}
+        cls._registry[cls.ClassOfJob][cls.__name__] = cls
+        return
+        
 
     def __init_subclass__(cls,**kwargs):
         super().__init_subclass__()
         cls.register_class(cls)
     
     @classmethod
-    def get_acivte_jobs(cls):
-        return {name:job for name,job in cls._registry.items() if not job.is_disabled}
+    def get_acivte_jobs(cls,ClassOfJob:str):
+        return {name:job for name,job in cls._registry[ClassOfJob].items() if not job.is_disabled}
 
     def __post_init__(self):
         self.job_name = 'backup_'+ self.FromTable +'_to_'+self.ToTable

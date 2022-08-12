@@ -29,8 +29,8 @@ class config:
         port    :int = 5432
     
     _config_class = {
-        'oracledb':_oracledb,
-        'postgresdb':_postgresdb
+        '_oracledb':_oracledb,
+        '_postgresdb':_postgresdb
         }
 
     def __init__(self,path: str=None) -> None:

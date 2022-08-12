@@ -1,14 +1,17 @@
-from .BackupBase import BackupJobs
 from dataclasses import dataclass
-from .backup_settings import localpg,oraclesdc
+from ..dbbackups import BackupJobs,dbmodel
+from ..settings import localpg,oraclesdc
 
 @dataclass
 class cdr_1500(BackupJobs):
+    FromDb:dbmodel = localpg
+    ToDb:dbmodel = oraclesdc    
     FromTable: str  =   'cdr_bakup'
     ToTable: str    =   'TEST_CDR_1500'
+    ClassOfJob: str = 'test'
+    
     def __post_init__(self):
-        self.FromDb = localpg
-        self.ToDb = oraclesdc
+
         self.FromColumn = [
         'CALLDATE','CONTAINER_ID','CLID','SRC','DST','DCONTEXT','CHANNEL',
         'DSTCHANNEL','LASTAPP','LASTDATA','DURATION','BILLSEC','DISPOSITION','AMAFLAGS',

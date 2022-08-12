@@ -1,7 +1,8 @@
-from ..dbwrapers import or_wraper,pg_wraper
-from ..configmod.ReadConfig import config
+from .configmod.ReadConfig import config
+from .dbwrapers import or_wraper,pg_wraper
 
 conf = config()
+ClassOfJobs = ('test',)
 
 pgcon = {
         'user':conf.postgresdb.dbuser,
