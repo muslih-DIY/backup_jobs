@@ -35,7 +35,7 @@ class config:
 
     def __init__(self,path: str=None) -> None:
         if path==None:
-            self.PATH = os.path.join(Path(__file__).resolve().parent, 'config.ini')
+            self.PATH = os.path.join(Path(__file__).resolve().parent.parent, 'config.ini')
         
         self.load()
     
