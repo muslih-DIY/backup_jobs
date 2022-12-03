@@ -1,5 +1,5 @@
 from .configmod.ReadConfig import config
-from .dbwrapers import or_wraper,pg_wraper
+from .dbwrapers.wrapers import or_wraper,pg_wraper
 
 conf = config()
 ClassOfJobs = ('test',)

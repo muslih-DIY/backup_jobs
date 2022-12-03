@@ -1,4 +1,4 @@
-from bkpjobs import backup
+from dbbackup import backup
 from datetime import datetime
 import sys
 if __name__=='__main__':
