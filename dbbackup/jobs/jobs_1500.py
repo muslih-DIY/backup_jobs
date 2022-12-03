@@ -27,7 +27,7 @@ class CDR_1500_RMN(BackupJobs):
 
         self.pre_pull_querys = (f'update {self.FromTable} set deletflag=1 where deletflag=0',)
 
-        self.pull_query=f"select now()::timestamp(6),{self.fromcol} from {self.FromTable} where deletflag=1 and CALLSTAGES like '%RMN'"
+        self.pull_query=f"select now()::timestamp(6),{self.fromcol} from {self.FromTable} where deletflag=1 and CALLSTAGES like 'RMN%'"
 
         self.error_update_query = ' where '.join([f'update {self.FromTable} set deletflag=3 ',unique_key_str]) 
 
