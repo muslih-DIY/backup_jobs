@@ -14,6 +14,6 @@ if __name__=='__main__':
     except:
         jobclass = None
     
-    getattr(backup,op)((jobclass,)) 
+    getattr(backup,op)((jobclass,) if jobclass else None) 
 
     print('TIME END :',str(datetime.now()))
