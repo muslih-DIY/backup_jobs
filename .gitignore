@@ -10,6 +10,7 @@ htmlcov/
 .coverage
 oncontainervenv/
 backup_cdr_bakup*.csv
-
+dbbackup/config.ini
 uploadtooracle.py
 198bkp.py
+*config.ini

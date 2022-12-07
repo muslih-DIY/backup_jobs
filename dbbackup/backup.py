@@ -1,5 +1,6 @@
 from .dbbackups import BackupJobs
-from .settings import job_to_be_run
+from .settings import job_to_be_run,debug
+from .dbs import get_db
 
 def execute(ClassOfJobs:list=None):
     if ClassOfJobs is None:
@@ -12,14 +13,14 @@ def execute(ClassOfJobs:list=None):
         return 1
     for name,job in jobs.items():
         print('class name: ',name)
-        x=job()
-        x()
+        work=job()
+        work(get_db,debug)
     return 1
 
 def details(ClassOfJobs:list=None):
     if ClassOfJobs is None:
         ClassOfJobs = job_to_be_run
-        
+
     for jobclass in ClassOfJobs:
         jobs = BackupJobs.get_acivte_jobs(jobclass)
         count = 1
@@ -30,6 +31,8 @@ def details(ClassOfJobs:list=None):
             job:BackupJobs=work()
             print(f'(count :{count})## job_name = {job.job_name} ##')
             print('='*60)
+            print(f'fromdbname  = {job.fromdbname} ')
+            print(f'todbname  = {job.todbname} ')
             print(f'FromTable  = {job.FromTable} ')
             print(f'ToTable  = {job.ToTable} ')
             print(f'FromColumn  = {job.FromColumn} ')

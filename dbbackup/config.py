@@ -53,8 +53,8 @@ def loadconfig():
     conf.register([postgresdb,oracledb])
     conf.load()
     pgenvconf = {}
-    pgenvconf['database']  = os.environ.get('database',conf.postgresdb.database if conf.postgresdb else '')
-    pgenvconf['user']      = os.environ.get('dbuser',conf.postgresdb.user if conf.postgresdb else '')
+    pgenvconf['dbname']  = os.environ.get('database',conf.postgresdb.dbname if conf.postgresdb else '')
+    pgenvconf['user']      = os.environ.get('dbuser',conf.postgresdb.dbuser if conf.postgresdb else '')
     pgenvconf['host']      = os.environ.get('dbhost',conf.postgresdb.host if conf.postgresdb else '')
     pgenvconf['password']  = os.environ.get('dbpassword',conf.postgresdb.password if conf.postgresdb else '')
     pgenvconf['port']      = os.environ.get('dbport',conf.postgresdb.port if conf.postgresdb else '5432')

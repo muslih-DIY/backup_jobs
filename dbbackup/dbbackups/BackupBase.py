@@ -29,6 +29,7 @@ class dbmodel(ABC):
         ...
     def dict_insert():
         ...
+        
 @dataclass
 class BackupJobs(ABC):
     
@@ -76,8 +77,9 @@ class BackupJobs(ABC):
 
 
         
-    def __call__(self,getdb:Callable):
+    def __call__(self,getdb:Callable,debug=False):
         "Need to pass a function 'getdb' which gives the dbconnection"
+        self.debug = debug
         self.FromDb:dbmodel = getdb(self.fromdbname)
         self.ToDb:dbmodel =  getdb(self.todbname)
         if not self.FromDb:
@@ -134,7 +136,7 @@ class BackupJobs(ABC):
         return 1
     
     def save_to_csv(self,head: list,data:list):
-        filename = ''.join([BACKUPDIR,'/',self.job_name,datetime.now().strftime('%Y%M%d-%H%M'),'.csv'])
+        filename = ''.join([self.BACKUPDIR,'/',self.job_name,datetime.now().strftime('%Y%M%d-%H%M'),'.csv'])
         with open(filename,"w") as logfile:
             csvfile_head = csv.writer(logfile)
             csvfile_head.writerow(head)
@@ -142,19 +144,23 @@ class BackupJobs(ABC):
         return filename
     
     def backup_update(self,gravity:int=0,remarks:str=''):
-        backup_status_table = 'IVRS_BACKUP_STATUS'
+        backup_status_table = self.backup_status_table
         status = {'BACKUP_DAY':datetime.now(),
             'NAME':self.job_name[:100],
             'FAILURE_GRAVITY' : gravity,
             'REMARK' :remarks[:127]}
+        print(status)
         self.ToDb.dict_insert(status,table=backup_status_table)
+        print(self.ToDb.error)
         self.FromDb.dict_insert(status,table=backup_status_table)
+        print(self.FromDb.error)
 
 
     def run(self) -> bool:
 
         if not self.run_query_set('pre_pull_querys'):
             self.job_report='pre_pull_query_execution failed'
+            self.update_report('ErrorDeatils : ',self.FromDb.error)
             return 0
         records,succses,head = self.FromDb.select(self.pull_query,header=True)
         
