@@ -1,7 +1,9 @@
-from .settings import ClassOfJobs
 from .dbbackups import BackupJobs
+from .settings import job_to_be_run
 
-def execute():
+def execute(ClassOfJobs:list=None):
+    if ClassOfJobs is None:
+        ClassOfJobs = job_to_be_run
     for jobclass in ClassOfJobs:
         jobs = BackupJobs.get_acivte_jobs(jobclass)
 
@@ -14,8 +16,10 @@ def execute():
         x()
     return 1
 
-def details():
-    
+def details(ClassOfJobs:list=None):
+    if ClassOfJobs is None:
+        ClassOfJobs = job_to_be_run
+        
     for jobclass in ClassOfJobs:
         jobs = BackupJobs.get_acivte_jobs(jobclass)
         count = 1

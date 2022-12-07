@@ -1,1 +1,1 @@
-from .jobs import jobs_198_test,jobs_1500,jobs_198,example_jobs
+from .jobs import *

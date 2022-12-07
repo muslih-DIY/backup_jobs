@@ -1,13 +1,13 @@
 from dataclasses import dataclass,field
 from abc import ABC
-from typing import List
+from typing import List,Callable
 from datetime import datetime
 import csv
 from pathlib import Path
 import os
 
-BASE_DIR = Path(__file__).resolve().parent
-BACKUPDIR = os.path.join(BASE_DIR, 'FailedJobs')
+_BASE_DIR = Path(__file__).resolve().parent
+
 
 class dbmodel(ABC):
 
@@ -32,11 +32,12 @@ class dbmodel(ABC):
 @dataclass
 class BackupJobs(ABC):
     
-    FromDb:dbmodel
-    ToDb  :dbmodel
+    fromdbname:str
+    todbname  :str
     ClassOfJob:str
     ToTable :   str
     FromTable   : str
+
     pull_query  :   str     =   field(init=False) 
     FromColumn  :   List    =   field(default_factory=list)
     ToColumn    :   List    =   field(default_factory=list)
@@ -45,8 +46,11 @@ class BackupJobs(ABC):
     unique_keys :  List=   field(default_factory=list)  
     post_push_error_handle_failed_querys:   List=field(init=False,default_factory=list) 
     post_push_error_handle_success_querys:   List=field(init=False,default_factory=list)
+    backup_status_table:str =   'BACKUP_STATUS'
+    BACKUPDIR : str = os.path.join(_BASE_DIR, 'FailedJobs')
     is_disabled : bool = False
     debug : bool = False
+
     _registry = {}
     
     @staticmethod
@@ -66,14 +70,26 @@ class BackupJobs(ABC):
         return {name:job for name,job in cls._registry[ClassOfJob].items() if not job.is_disabled}
 
     def __post_init__(self):
+
         self.job_name = 'backup_'+ self.FromTable +'_to_'+self.ToTable
         self.job_report = ''.join(['\tREPORT\n','= ='*10])
-    
-    def __call__(self):
+
+
+        
+    def __call__(self,getdb:Callable):
+        "Need to pass a function 'getdb' which gives the dbconnection"
+        self.FromDb:dbmodel = getdb(self.fromdbname)
+        self.ToDb:dbmodel =  getdb(self.todbname)
+        if not self.FromDb:
+            raise Exception('from database is null')
+        if not self.ToDb:
+            raise Exception('to database is null')
+
         self.FromDb.connect()
         self.ToDb.connect() 
         status = self.run()
-        print(self.job_report)
+        if self.debug:
+            print(self.job_report)
         self.ToDb.close()
         self.FromDb.close()
         return status
@@ -132,6 +148,7 @@ class BackupJobs(ABC):
             'FAILURE_GRAVITY' : gravity,
             'REMARK' :remarks[:127]}
         self.ToDb.dict_insert(status,table=backup_status_table)
+        self.FromDb.dict_insert(status,table=backup_status_table)
 
 
     def run(self) -> bool:
@@ -145,13 +162,18 @@ class BackupJobs(ABC):
             self.update_report('records collection fromdb failed')
             self.update_report('ErrorDeatils : ',self.FromDb.error)
             return 0
+
         self.update_report(f"Total Records to backup : {len(records)}")
+
         if not records:
-            self.update_report("Job Completed Successfully\n",'= ='*10)      
+            self.update_report(" No records , Job Completed Successfully\n",'= ='*10)      
             return 1
         self.getandupdate_unique_key_index(head=head)
+
         errors = self.ToDb.insert_many_list(self.ToTable,self.ToColumn,records,batcherrors=True)
+
         self.update_report(f"Total backup failed count : {len(errors)}")
+        
         # if error managment failed
         if not self.manage_error(errors):
             filename = self.save_to_csv(self.ToColumn,map(lambda row:row[0],errors))

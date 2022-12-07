@@ -1,15 +1,15 @@
 from dataclasses import dataclass
 from ..dbbackups import BackupJobs,dbmodel
-from ..settings import localpg,oraclesdc
+from ..settings import FAILED_BKP_DIR
 
 @dataclass
 class cdr_1500(BackupJobs):
-    FromDb:dbmodel = localpg
-    ToDb:dbmodel = oraclesdc    
+    FromDb:dbmodel = 'localpg'
+    ToDb:dbmodel = 'oraclesdc'    
     FromTable: str  =   'cdr_bakup'
     ToTable: str    =   'TEST_CDR_1500'
     ClassOfJob: str = 'test'
-    
+    BACKUPDIR: str = FAILED_BKP_DIR  
     def __post_init__(self):
 
         self.FromColumn = [
